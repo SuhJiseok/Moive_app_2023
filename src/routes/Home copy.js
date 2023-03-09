@@ -1,31 +1,22 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react'
+import React, { Component } from 'react'
 import Movie from '../components/Movie';
 import '../styles/Home.css';
 
 
-function Home() {
-  // state = {
-  //   isLoading: true,
-  //   movies: [],
-  // }
-  const [isLoading, setIsLoading] = useState(true);
-  const [movies, setMovies] = useState([]);
+export class Home extends Component {
+  state = {
+    isLoading: true,
+    movies: [],
+  }
+  componentDidMount() {//이 시점에서 영화 가져온다
+    // setTimeout(()=>{
+    //   this.setState({isLoading:false});
+    // }, 6000);
+    this.getMovies();
+  }
 
-
-
-  // componentDidMount() {//이 시점에서 영화 가져온다
-  //   // setTimeout(()=>{
-  //   //   this.setState({isLoading:false});
-  //   // }, 6000);
-  //   this.getMovies();
-  // }
-
-  useEffect(() => {
-    getMovies();
-    }, []);
-
-  const getMovies = async () =>{
+  getMovies = async () =>{
     const {
       data : {
         data : {
@@ -35,15 +26,14 @@ function Home() {
     } =
     await axios.get('https://yts-proxy.now.sh/list_movies.json?genre=animation&sort_by=like_count');//마지막에 ?넣으면 조건 붙일수 있음 ,genre가 animation인것 중에서 좋아요 순으로
     console.log(movies);
-    // this.setState({
-    //   isLoading: false,
-    //   movies,       //movies: movies, //키:키값 이름이 동일하면 하나만 써주면 됨
-    // })
-    setIsLoading(false);
-    setMovies(movies);
-  }
+    this.setState({
+      isLoading: false,
+      movies,       //movies: movies, //키:키값 이름이 동일하면 하나만 써주면 됨
+    })
 
-    // const {isLoading, movies} = this.state;//구조 분해 할당
+  }
+  render() {
+    const {isLoading, movies} = this.state;//구조 분해 할당
     return (
       
         <section className='container'>
@@ -66,10 +56,11 @@ function Home() {
           </div>
           } 
           
+
         </section>
       
     )
   }
-
+}
 
 export default Home;
